@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Clock</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #0d0d0d, #1a1a2e, #16213e);
+            color: #e0e0e0;
+            font-family: 'Orbitron', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            flex-direction: column;
+        }
+        .clock-container {
+            text-align: center;
+        }
+        .clock, .date {
+            font-size: 3rem;
+            padding: 20px 40px;
+            background: linear-gradient(145deg, #111, #222);
+            border-radius: 15px;
+            box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.9), -8px -8px 20px rgba(50, 50, 50, 0.3);
+            border: 2px solid #444;
+            text-align: center;
+            font-weight: bold;
+            color: #0ff;
+            text-shadow: 0 0 15px #0ff, 0 0 30px #0ff;
+            animation: glow 1.5s infinite alternate;
+            margin: 10px 0;
+        }
+        .date {
+            font-size: 2rem;
+            color: #ff0;
+            text-shadow: 0 0 10px #ff0, 0 0 20px #ff0;
+        }
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+            }
+            to {
+                text-shadow: 0 0 20px #0ff, 0 0 40px #0ff;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="clock-container">
+        <div class="date" id="date">Loading date...</div>
+        <div class="clock" id="clock">00:00:00 AM</div>
+    </div>
+    <script>
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12; // Convert to 12-hour format and handle midnight (0 to 12)
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
+        }
+        
+        function updateDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('date').textContent = now.toLocaleDateString('en-US', options);
+        }
+        
+        setInterval(updateClock, 1000);
+        updateClock();
+        updateDate();
+    </script>
+</body>
+</html>
