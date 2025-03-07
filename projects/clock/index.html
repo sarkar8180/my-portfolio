@@ -5,97 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Clock</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+        
         body {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(45deg, #1a1a1a, #2c2c2c);
+            height: 100vh;
+            background: linear-gradient(135deg, #0d0d0d, #1a1a2e, #16213e);
+            color: #e0e0e0;
+            font-family: 'Orbitron', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            flex-direction: column;
         }
-
-        .clock {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px 50px;
-            border-radius: 15px;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .time {
-            font-size: 80px;
-            color: #fff;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-            letter-spacing: 3px;
-        }
-
-        .date {
-            font-size: 24px;
-            color: #ddd;
+        .clock-container {
             text-align: center;
-            margin-top: 10px;
-            letter-spacing: 2px;
         }
-
-        .seconds {
-            font-size: 40px;
-            vertical-align: top;
-            margin-left: 5px;
+        .clock, .date {
+            font-size: 3rem;
+            padding: 20px 40px;
+            background: linear-gradient(145deg, #111, #222);
+            border-radius: 15px;
+            box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.9), -8px -8px 20px rgba(50, 50, 50, 0.3);
+            border: 2px solid #444;
+            text-align: center;
+            font-weight: bold;
+            color: #0ff;
+            text-shadow: 0 0 15px #0ff, 0 0 30px #0ff;
+            animation: glow 1.5s infinite alternate;
+            margin: 10px 0;
         }
-
-        @media (max-width: 600px) {
-            .time {
-                font-size: 60px;
+        .date {
+            font-size: 2rem;
+            color: #ff0;
+            text-shadow: 0 0 10px #ff0, 0 0 20px #ff0;
+        }
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
             }
-            .seconds {
-                font-size: 30px;
-            }
-            .date {
-                font-size: 20px;
+            to {
+                text-shadow: 0 0 20px #0ff, 0 0 40px #0ff;
             }
         }
     </style>
 </head>
 <body>
-    <div class="clock">
-        <div class="time" id="time">00:00<span class="seconds">00</span></div>
-        <div class="date" id="date">Monday, January 1</div>
+    <div class="clock-container">
+        <div class="date" id="date">Loading date...</div>
+        <div class="clock" id="clock">00:00:00 AM</div>
     </div>
-
     <script>
         function updateClock() {
             const now = new Date();
-            const time = document.getElementById('time');
-            const dateDisplay = document.getElementById('date');
-
-            // Format time
-            const hours = String(now.getHours()).padStart(2, '0');
+            let hours = now.getHours();
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
-
-            // Format date
-            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-            
-            const day = days[now.getDay()];
-            const month = months[now.getMonth()];
-            const date = now.getDate();
-
-            // Update DOM
-            time.innerHTML = `${hours}:${minutes}<span class="seconds">${seconds}</span>`;
-            dateDisplay.textContent = `${day}, ${month} ${date}`;
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12; // Convert to 12-hour format and handle midnight (0 to 12)
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
         }
-
-        // Update clock immediately and then every second
-        updateClock();
+        
+        function updateDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('date').textContent = now.toLocaleDateString('en-US', options);
+        }
+        
         setInterval(updateClock, 1000);
+        updateClock();
+        updateDate();
     </script>
 </body>
-</html> 
+</html>
